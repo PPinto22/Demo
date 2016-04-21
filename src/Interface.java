@@ -142,7 +142,7 @@ public class Interface extends JFrame {
 		mntmNewMenuItem_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					textArea.append("> servicos (#Serv,Descricao,Instituicaoo,Cidade)\n");
+					textArea.append("> servicos (#Serv,Descricao,Instituicao,Cidade)\n");
 					String servicosPos = prolog.findAll("servico(S,D,I,C)","servico(S,D,I,C)",4);
 					String servicosNeg = prolog.findAll("servico(S,D,I,C)","-servico(S,D,I,C)",4);
 					textArea.append(servicosPos);

@@ -1,73 +1,105 @@
+:- set_prolog_flag( discontiguous_warnings,off ).
+:- set_prolog_flag( single_var_warnings,off ).
+:- set_prolog_flag( unknown,fail ).
 
-
-% ------------------ Ficheiro de Teste ---------------------- %
-
-
-%--------------------------------- - - - - - - - - - -  -  -  -
-% SICStus PROLOG: definicoes iniciais
-
-:- consult(demo).
 :- multifile '-'/1.
 
-:- dynamic jogo/3.
+%Importar o ficheiro que possui a base de conhecimento
+:- consult('dadosProblema.pl').
+:- consult('demo.pl').
+ 
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+%Representação de conhecimento negativo
 
-%--------------------------------- - - - - - - - - - -  -  -  -
-% Extensao do predicado jogo: Id,Arb,AjCusto  -> {V,F,D}
+%Profissional
+-profissional( IP,N,S,A ):-
+        nao(profissional( I,N,S,A )),
+        nao( excecao( profissional( I,N,S,A ))).
 
--jogo(Id,A,C) :-
-	nao(jogo(Id,A,C)),
-	nao(excepcao(jogo(Id,A,C))).
-		
-excepcao(jogo(Id,A,C)) :- jogo(Id,A,nulo001).
 
-%1
-jogo(1,aa,500).
+%Utente
+-utente( IU,N,A,M ):-
+        nao(utente( I,N,A,M )),
+        nao( excecao( utente( I,N,A,M ))).
 
-%2
-jogo(2,bb,nulo001).
+%Serviço
+-servico( IS,D,IN,C ):-
+        nao(servico( I,D,I,C )),
+        nao( excecao( servico( I,D,I,C ))).
 
-%3
-excepcao(jogo(3,cc,500)).
-excepcao(jogo(3,cc,2500)).
+%Consulta
+-consulta( D,IU,IS,C ):-
+        nao(consulta( D,IU,IS,C )),
+        nao( excecao( consulta( D,IU,IS,C ))).
 
-%4
-excepcao(jogo(4,dd,C)) :-
-	C >= 250,
-	C =< 750.
-	
-%5
-jogo(5,ee,nulo005).
-excepcao(jogo(J,A,C)) :- jogo(J,A,nulo005).
-nulo(nulo005).
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+%- - - - - - - - -  - -Representação de conhecimento Imperfeito
 
-+jogo(J,A,C) :: (
-	solucoes(C,( jogo(5,ee,C), nao(nulo(C))), S),
-	length(S,0) 
-	).
-	
-%6
-jogo(6,ff,250).
-excepcao(jogo(6,ff,C)) :-
-	C > 5000.
-	
-%7
--jogo(7,gg,2500).
-jogo(7,gg,nulo007).
-excepcao(jogo(J,A,C)) :- jogo(J,A,nulo007).
+%Representação de conhecimento incerto
 
-%8
-excepcao(jogo(8,hh,C)) :-
-	cerca(1000,Sup,Inf),
-	C >= Inf,
-	C =< Sup.
+%---
+excecao(profissional( IP,N,S,A )):- 
+                    profissional( IP,N,S,desconhecido-1 ).
+excecao(profissional( IP,N,S,A )):- 
+                    profissional( IP,N,S,desconhecido-2 ).
+excecao(profissional( IP,N,S,A )):- 
+                    profissional( IP,N,S,desconhecido-3 ).                   
 
-cerca(X,Sup,Inf) :-
-	Sup is X*1.25,
-	Inf is X*0.75.
-	
-mproximo(X,Sup,Inf) :-
-	Sup is X*1.1,
-	Inf is X*0.9.
+%---
+excecao(utente( IU,N,A,M )):- 
+                    utente( IU,N,A,desconhecido-4 ).
+excecao(utente( IU,N,A,M )):- 
+                    utente( IU,N,A,desconhecido-5 ).
+excecao(utente( IU,N,A,M )):- 
+                    utente( IU,N,A,desconhecido-6 ).
+excecao(utente( IU,N,A,M )):- 
+                    utente( IU,N,A,desconhecido-7 ).
+%---
 
+excecao(servico( IS,D,IN,C )):- 
+                    servico( IS,D,IN,desconhecido-8 ).
+excecao(servico( IS,D,IN,C )):- 
+                    servico( IS,D,IN,desconhecido-9 ).
+excecao(servico( IS,D,IN,C )):- 
+                    servico( IS,D,IN,desconhecido-10 ).
+excecao(servico( IS,D,IN,C )):- 
+                    servico( IS,D,IN,desconhecido-11 ).
+
+%---
+excecao(consulta( D,IU,IS,C )):- 
+                    consulta( D,IU,IS,desconhecido-12 ).
+excecao(consulta( D,IU,IS,C )):- 
+                    consulta( D,IU,IS,desconhecido-13 ).
+
+%- - - - - - - - - - - - - - - - - - - - - - - -- - - - - -
+%Representação de conhecimento impreciso
+
+excecao(profissional(11,antonia-abreu,3,40)).
+excecao(profissional(11,antonia-abreu,3,20)).
+
+
+excecao(profissional(12,gloria-costa,4,10)).
+excecao(profissional(12,gloria-costa,4,30)).
+excecao(profissional(12,gloria-costa,4,20)).
+
+excecao(consulta(01-01-2016,9,8,Custo)) :- Custo >= 5, Custo =< 30.
+
+excecao(servico(11,urologista,hospital-dos-lusiadas,lisboa)).
+excecao(servico(11,urologista,hospital-dos-lusiadas,porto)).
+
+%- - - - - - - - - - - - - - - - - - - - - - - -- - - - - -
+%Representação de conhecimento interdito
+
+nulo(interdito-1).
+excecao(profissional( IP,N,S,A )) :- profissional( IP,N,S,interdito-1 ).
++profissional( IP,N,S,A ) :: (solucoes(As, ( profissional(13,cesar-mourao,8,As), nao(nulo(As)) ), S),
+                    comprimento(S, R), R == 0 ).
+
+
+nulo(interdito-2).
+excecao(utente( IU,N,A,M )) :- utente( IU,N,A,interdito-2 ).
++utente( IU,N,A,M ) :: (solucoes(Ms, ( utente( 11,albertino-silva,40,Ms ), nao(nulo(Ms)) ), S),
+                    comprimento(S, R), R == 0 ).
 
 

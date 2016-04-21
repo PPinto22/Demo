@@ -39,6 +39,11 @@ public class Interface extends JFrame {
 	private Prolog prolog;
 	private Historico historico;
 	private static final String ficheiro = System.getProperty("user.dir")+"\\instituicao.pl";
+	private JMenu mnDados;
+	private JMenuItem mntmNewMenuItem;
+	private JMenuItem mntmNewMenuItem_1;
+	private JMenuItem mntmConsultas;
+	private JMenuItem mntmProfissionais;
 
 	
 	private void start() {
@@ -112,6 +117,74 @@ public class Interface extends JFrame {
 			}
 		});
 		mnNewMenu.add(mntmCarregarFicheiro);
+		
+		mnDados = new JMenu("Dados");
+		menuBar.add(mnDados);
+		
+		mntmNewMenuItem = new JMenuItem("Utentes");
+		mntmNewMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					textArea.append("> utentes (#IdUt,Nome,Idade,Morada)\n");
+					String utentesPos = prolog.findAll("utente(Id,N,I,M)","utente(Id,N,I,M)",4);
+					String utentesNeg = prolog.findAll("utente(Id,N,I,M)","-utente(Id,N,I,M)",4);
+					textArea.append(utentesPos);
+					textArea.append(utentesNeg+"\n");
+				} catch (Exception e1) {
+					textArea.append("Erro\n");
+				}
+				
+			}
+		});
+		mnDados.add(mntmNewMenuItem);
+		
+		mntmNewMenuItem_1 = new JMenuItem("Servicos");
+		mntmNewMenuItem_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					textArea.append("> servicos (#Serv,Descricao,Instituicaoo,Cidade)\n");
+					String servicosPos = prolog.findAll("servico(S,D,I,C)","servico(S,D,I,C)",4);
+					String servicosNeg = prolog.findAll("servico(S,D,I,C)","-servico(S,D,I,C)",4);
+					textArea.append(servicosPos);
+					textArea.append(servicosNeg+"\n");
+				} catch (Exception e1) {
+					textArea.append("Erro\n");
+				}
+			}
+		});
+		mnDados.add(mntmNewMenuItem_1);
+		
+		mntmConsultas = new JMenuItem("Consultas");
+		mntmConsultas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					textArea.append("> consultas (Data,#IdUt,#Serv,Custo)\n");
+					String consultasPos = prolog.findAll("consulta(D,U,S,C)","consulta(D,U,S,C)",4);
+					String consultasNeg = prolog.findAll("consulta(D,U,S,C)","-consulta(D,U,S,C)",4);
+					textArea.append(consultasPos);
+					textArea.append(consultasNeg+"\n");
+				} catch (Exception e1) {
+					textArea.append("Erro\n");
+				}
+			}
+		});
+		mnDados.add(mntmConsultas);
+		
+		mntmProfissionais = new JMenuItem("Profissionais");
+		mntmProfissionais.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					textArea.append("> profissionais (#IdProf,Nome,#Serv,Anos-Servico )\n");
+					String profPos = prolog.findAll("profissional(Id,N,S,A)","profissional(Id,N,S,A)",4);
+					String profNeg = prolog.findAll("profissional(Id,N,S,A)","-profissional(Id,N,S,A)",4);
+					textArea.append(profPos);
+					textArea.append(profNeg+"\n");
+				} catch (Exception e1) {
+					textArea.append("Erro\n");
+				}
+			}
+		});
+		mnDados.add(mntmProfissionais);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -135,7 +208,7 @@ public class Interface extends JFrame {
 					if(!textField.getText().equals("")){
 						historico.add(textField.getText());
 						try{
-							String resposta = prolog.query(textField.getText());
+							String resposta = prolog.demo(textField.getText());
 							textArea.append(resposta+"\n");
 						}
 						catch(Exception exception){

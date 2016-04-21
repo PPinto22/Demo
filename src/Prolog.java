@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import se.sics.jasper.Query;
@@ -17,7 +18,7 @@ public class Prolog {
 		sp.load(filePath);
 	}
 		
-	public String query(String queryS) throws NoSuchMethodException, InterruptedException, Exception{
+	public String demo(String queryS) throws NoSuchMethodException, InterruptedException, Exception{
 		if (queryS != null && queryS.length() > 0 && queryS.charAt(queryS.length()-1)=='.') {
 			queryS = queryS.substring(0, queryS.length()-1);
 		}
@@ -32,6 +33,46 @@ public class Prolog {
 			output.append("\n"+this.parseSolution(map.toString()));
 		}
 		return output.toString();
+	}
+	
+	public String query(String queryS) throws NoSuchMethodException, InterruptedException, Exception{
+		HashMap map = new HashMap();
+		Query query = sp.openPrologQuery(queryS, map);
+		StringBuilder output = new StringBuilder();
+		if(query.nextSolution()){
+			output.append(this.parseSolution(map.toString()));
+		}
+		while(query.nextSolution()){
+			output.append("\n"+this.parseSolution(map.toString()));
+		}
+		return output.toString();
+	}
+	
+	public String findAll(String template, String goal, int argc) throws NoSuchMethodException, InterruptedException, Exception{
+		StringBuilder sb = new StringBuilder();
+		String predicado = goal.substring(0, goal.indexOf('('));
+		String solutions = this.query("findall("+template+","+goal+",L).");
+		solutions = solutions.substring(solutions.indexOf('['), solutions.length()-1);
+		if(solutions.equals("[]"))
+			return "";
+		
+		solutions = solutions.substring(1,solutions.length()-1);
+		
+		ArrayList<String> p = new ArrayList<>();
+		String[] split = solutions.split(",");
+
+		for(int i = 0; i<split.length; i+=argc){
+			if(!split[i].contains("_")){
+				sb.append(predicado+"( ");
+				for(int j = 0; j<argc; j++){
+					sb.append(split[i+j]);
+					if(argc-j > 1)
+						sb.append(", ");
+				}
+				sb.append(" ).\n");
+			}
+		}
+		return sb.toString();
 	}
 
 	private String parseSolution(String solution) {
@@ -103,10 +144,21 @@ public class Prolog {
 		list.append('[');
 		Boolean end = false;
 		int nivel = 0;
+		int hifen = 0;
 		for(; !end; index++){
 			char c = solution.charAt(index);
 			switch(c){
+			case '-':
+				hifen++;
+				break;
 			case '.': case '[': case ']':
+				break;
+			case ',':
+				if(hifen > 0){
+					list.append('-');
+					hifen--;
+				}
+				else list.append(',');
 				break;
 			case '(':
 				nivel++;

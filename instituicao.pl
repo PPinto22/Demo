@@ -8,6 +8,28 @@
 :- consult('dadosProblema.pl').
 :- consult('demo.pl').
  
+% Invariantes Estruturais: 
+
+% Nao permitir a insercao de conhecimento repetido ou contraditorio
++utente( Id,N,I,M ) :: (solucoes(Id,utente(Id,_,_,_),SolsP ),
+                        comprimento( SolsP,Cmp ), 
+                        Cmp == 1
+                       ). 
++servico( Id,D,I,C ) :: (solucoes(Id,servico(Id,_,_,_),Sols ),
+                         comprimento( Sols,Cmp ), 
+                         Cmp == 1
+                        ). 
++consulta( D,U,S,C ) :: (solucoes((D,U,S),consulta(D,U,S,_),Sols ),
+                         comprimento( Sols,Cmp ), 
+                         Cmp == 1
+                        ). 
++profissional( Id,N,S,A ) :: (solucoes(Id,profissional(Id,_,_,_),Sols ),
+                              comprimento( Sols,Cmp ), 
+                              Cmp == 1
+                             ).
+					 
+							 
+ 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 %Representação de conhecimento negativo
 
@@ -93,13 +115,13 @@ excecao(servico(11,urologista,hospital-dos-lusiadas,porto)).
 
 nulo(interdito-1).
 excecao(profissional( IP,N,S,A )) :- profissional( IP,N,S,interdito-1 ).
-+profissional( IP,N,S,A ) :: (solucoes(As, ( profissional(13,cesar-mourao,8,As), nao(nulo(As)) ), S),
-                    comprimento(S, R), R == 0 ).
++profissional( IP,N,S,A ) :: (solucoes(As, ( profissional(13,cesar-mourao,8,As), nao(nulo(As)) ), Sols),
+                    comprimento(Sols, Cmp), Cmp == 0 ).
 
 
 nulo(interdito-2).
 excecao(utente( IU,N,A,M )) :- utente( IU,N,A,interdito-2 ).
-+utente( IU,N,A,M ) :: (solucoes(Ms, ( utente( 11,albertino-silva,40,Ms ), nao(nulo(Ms)) ), S),
-                    comprimento(S, R), R == 0 ).
++utente( IU,N,A,M ) :: (solucoes(Ms, ( utente( 11,albertino-silva,40,Ms ), nao(nulo(Ms)) ), Sols),
+                    comprimento(Sols, Cmp), Cmp == 0 ).
 
 

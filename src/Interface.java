@@ -126,8 +126,8 @@ public class Interface extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					textArea.append("> utentes (#IdUt,Nome,Idade,Morada)\n");
-					String utentesPos = prolog.findAll("utente(Id,N,I,M)","utente(Id,N,I,M)",4);
-					String utentesNeg = prolog.findAll("utente(Id,N,I,M)","-utente(Id,N,I,M)",4);
+					String utentesPos = prolog.findAll("utente","(Id,N,I,M)","utente(Id,N,I,M)",4);
+					String utentesNeg = prolog.findAll("-utente","(Id,N,I,M)","-utente(Id,N,I,M)",4);
 					textArea.append(utentesPos);
 					textArea.append(utentesNeg+"\n");
 				} catch (Exception e1) {
@@ -143,8 +143,8 @@ public class Interface extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					textArea.append("> servicos (#Serv,Descricao,Instituicao,Cidade)\n");
-					String servicosPos = prolog.findAll("servico(S,D,I,C)","servico(S,D,I,C)",4);
-					String servicosNeg = prolog.findAll("servico(S,D,I,C)","-servico(S,D,I,C)",4);
+					String servicosPos = prolog.findAll("servico","(S,D,I,C)","servico(S,D,I,C)",4);
+					String servicosNeg = prolog.findAll("-servico","(S,D,I,C)","-servico(S,D,I,C)",4);
 					textArea.append(servicosPos);
 					textArea.append(servicosNeg+"\n");
 				} catch (Exception e1) {
@@ -159,8 +159,8 @@ public class Interface extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					textArea.append("> consultas (Data,#IdUt,#Serv,Custo)\n");
-					String consultasPos = prolog.findAll("consulta(D,U,S,C)","consulta(D,U,S,C)",4);
-					String consultasNeg = prolog.findAll("consulta(D,U,S,C)","-consulta(D,U,S,C)",4);
+					String consultasPos = prolog.findAll("consulta","(D,U,S,C)","consulta(D,U,S,C)",4);
+					String consultasNeg = prolog.findAll("-consulta","(D,U,S,C)","-consulta(D,U,S,C)",4);
 					textArea.append(consultasPos);
 					textArea.append(consultasNeg+"\n");
 				} catch (Exception e1) {
@@ -175,8 +175,8 @@ public class Interface extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					textArea.append("> profissionais (#IdProf,Nome,#Serv,Anos-Servico )\n");
-					String profPos = prolog.findAll("profissional(Id,N,S,A)","profissional(Id,N,S,A)",4);
-					String profNeg = prolog.findAll("profissional(Id,N,S,A)","-profissional(Id,N,S,A)",4);
+					String profPos = prolog.findAll("profissional","(Id,N,S,A)","profissional(Id,N,S,A)",4);
+					String profNeg = prolog.findAll("-profissional","(Id,N,S,A)","-profissional(Id,N,S,A)",4);
 					textArea.append(profPos);
 					textArea.append(profNeg+"\n");
 				} catch (Exception e1) {

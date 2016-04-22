@@ -48,9 +48,8 @@ public class Prolog {
 		return output.toString();
 	}
 	
-	public String findAll(String template, String goal, int argc) throws NoSuchMethodException, InterruptedException, Exception{
+	public String findAll(String predicado, String template, String goal, int argc) throws NoSuchMethodException, InterruptedException, Exception{
 		StringBuilder sb = new StringBuilder();
-		String predicado = goal.substring(0, goal.indexOf('('));
 		String solutions = this.query("findall("+template+","+goal+",L).");
 		solutions = solutions.substring(solutions.indexOf('['), solutions.length()-1);
 		if(solutions.equals("[]"))
@@ -60,12 +59,17 @@ public class Prolog {
 		
 		ArrayList<String> p = new ArrayList<>();
 		String[] split = solutions.split(",");
+		ArrayList<String> s = new ArrayList<String>();
+		for(int i = 0; i<split.length; i++){
+			if(!split[i].equals(""))
+				s.add(split[i]);
+		}
 
-		for(int i = 0; i<split.length; i+=argc){
-			if(!split[i].contains("_")){
+		for(int i = 0; i<s.size(); i+=argc){
+			if(!s.get(i).contains("_")){
 				sb.append(predicado+"( ");
 				for(int j = 0; j<argc; j++){
-					sb.append(split[i+j]);
+					sb.append(s.get(i+j));
 					if(argc-j > 1)
 						sb.append(", ");
 				}
